@@ -1,0 +1,25 @@
+<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>KIT 26 - Boutique Officielle</title>
+    <!-- CE LIEN ACTIVE LE DESIGN TAILWIND INSTANTANÉMENT -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              cyan: { 400: '#22d3ee', 500: '#06b6d4' }
+            }
+          }
+        }
+      }
+    </script>
+  </head>
+  <body class="bg-[#050505]">
+    <div id="root"></div>
+    <script type="module" src="/src/main.jsx"></script>
+  </body>
+</html>
