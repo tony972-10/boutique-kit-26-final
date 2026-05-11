@@ -948,7 +948,7 @@ const App = () => {
   const availableCategories = useMemo(() => CATEGORIES.filter(cat => displayProducts.some(p => p.category === cat)), [displayProducts]);
 
   return (
-    <div className="min-h-screen bg-[#050505] font-sans text-zinc-100 selection:bg-cyan-900 selection:text-white relative">
+    <div className="w-full max-w-full m-0 p-0 min-h-screen bg-[#050505] font-sans text-zinc-100 selection:bg-cyan-900 selection:text-white relative overflow-x-hidden">
       
       {/* GLOBAL TOAST NOTIFICATION */}
       {toastMessage && (
@@ -1047,7 +1047,7 @@ const App = () => {
         </div>
       )}
 
-      <header className="py-8 px-10 border-b border-zinc-900 flex justify-between items-center max-w-[1500px] mx-auto">
+      <header className="py-8 px-10 border-b border-zinc-900 flex justify-between items-center w-full mx-auto">
         <h1 onClick={() => { setView('shop'); setFilter('ALL'); }} className="text-4xl font-black italic tracking-tighter cursor-pointer hover:text-cyan-400 transition-all">KIT 26</h1>
         
         <div className="flex items-center gap-6">
@@ -1074,8 +1074,8 @@ const App = () => {
         </div>
       </header>
 
-      <nav className="bg-zinc-950 border-b border-zinc-900 sticky top-0 z-40 shadow-2xl relative">
-        <div className="max-w-[1500px] mx-auto relative flex items-center">
+      <nav className="bg-zinc-950 border-b border-zinc-900 sticky top-0 z-40 shadow-2xl relative w-full">
+        <div className="w-full relative flex items-center">
           <button 
             onClick={() => scrollNav('left')} 
             className="absolute left-0 z-10 h-full px-2 sm:px-6 bg-gradient-to-r from-zinc-950 via-zinc-950 to-transparent text-zinc-500 hover:text-cyan-400 transition-colors flex items-center cursor-pointer"
@@ -1101,10 +1101,10 @@ const App = () => {
 
       {view === 'shop' && displayProducts.length > 0 && <HeroCarousel products={displayProducts} onProductClick={(p) => { setSelectedProduct(p); setView('product'); window.scrollTo(0,0); }} getCartQty={getProductCartQty} />}
 
-      <main id="shop-content" className="max-w-[1500px] mx-auto px-10 py-16 min-h-[60vh]">
+      <main id="shop-content" className="w-full px-10 py-16 min-h-[60vh]">
         
         {view === 'admin' && isAdminAuthenticated && (
-          <div className="animate-in fade-in duration-500 space-y-16">
+          <div className="animate-in fade-in duration-500 space-y-16 max-w-[1500px] mx-auto">
              <div className="flex justify-between items-end">
                 <h2 className="text-5xl font-black uppercase italic tracking-tighter text-white">Administration <span className="text-cyan-500">.</span></h2>
              </div>
@@ -1217,7 +1217,7 @@ const App = () => {
         )}
 
         {view === 'shop' && (
-           <div className="flex flex-col lg:flex-row gap-16 animate-in fade-in duration-700">
+           <div className="flex flex-col lg:flex-row gap-16 animate-in fade-in duration-700 w-full">
               <aside className="w-full lg:w-64 shrink-0 lg:sticky lg:top-24 self-start z-30">
                 {SUBCATEGORIES[filter] ? (
                   <div className="border-2 border-zinc-900 rounded-[3rem] overflow-hidden shadow-2xl bg-[#0a0a0a]">
@@ -1368,7 +1368,7 @@ const App = () => {
         )}
       </main>
 
-      <footer className="relative bg-zinc-950 text-white py-32 mt-32 border-t-[15px] border-cyan-500 shadow-[0_-30px_100px_rgba(0,0,0,1)] text-center">
+      <footer className="w-full relative bg-zinc-950 text-white py-32 mt-32 border-t-[15px] border-cyan-500 shadow-[0_-30px_100px_rgba(0,0,0,1)] text-center">
         <button 
           onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
           className="absolute left-1/2 -translate-x-1/2 -top-10 w-20 h-20 bg-[#050505] border-[5px] border-cyan-500 text-cyan-400 rounded-full flex items-center justify-center shadow-[0_0_30px_rgba(6,182,212,0.6)] hover:bg-cyan-500 hover:text-black transition-all hover:scale-110 z-50 cursor-pointer"
