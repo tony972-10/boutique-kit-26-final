@@ -1413,8 +1413,9 @@ const App = () => {
       <AiChatbot cartCount={cart.length} onCartClick={() => { setView('cart'); window.scrollTo(0,0); }} />
 
       <style>{`
-        #root { max-width: none !important; margin: 0 !important; padding: 0 !important; text-align: left !important; }
-        body { overflow-x: hidden; margin: 0; background-color: #050505; } 
+        :root { max-width: 100% !important; width: 100% !important; margin: 0 !important; padding: 0 !important; }
+        html, body { overflow-x: hidden; margin: 0 !important; padding: 0 !important; background-color: #050505 !important; width: 100% !important; display: block !important; } 
+        #root { max-width: 100% !important; width: 100% !important; margin: 0 !important; padding: 0 !important; text-align: left !important; display: block !important; }
         .scrollbar-hide::-webkit-scrollbar { display: none; }
         .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
         .custom-scrollbar::-webkit-scrollbar { width: 4px; }
