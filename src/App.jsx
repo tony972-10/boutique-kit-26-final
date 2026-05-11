@@ -58,16 +58,50 @@ const LOCATIONS_FR = ["Paris", "Lyon", "Marseille", "Yvelines", "Gironde", "Bret
 const CATEGORIES = ["COUPE DU MONDE 2026", "LIGUE 1", "SERIE A", "PREMIER LEAGUE", "BUNDESLIGA", "LIGA", "RÉTRO", "AUTRES CLUBS", "SURVÊTEMENTS", "ENFANT"];
 
 const SUBCATEGORIES = {
-  "COUPE DU MONDE 2026": ["Mexico", "France", "Germany", "Brazil", "Portugal", "England", "Argentina", "Italy", "Netherlands", "Spain", "Japan", "Morocco", "Senegal", "Uruguay", "Algeria", "Korea", "Jamaica", "Soviet Union", "Colombia", "Chile"],
-  "LIGUE 1": ["PSG", "Marseille", "Lyon", "Monaco", "Lille", "Strasbourg", "Paris FC"],
-  "SERIE A": ["Juventus", "AC Milan", "Inter Milan", "AS Roma", "Napoli", "Parma", "Lazio", "Fiorentina"],
-  "PREMIER LEAGUE": ["Liverpool", "Manchester City", "Manchester Utd", "Chelsea", "Arsenal", "Tottenham"],
-  "BUNDESLIGA": ["Bayern Munich", "Borussia Dortmund", "Bayer Leverkusen", "RB Leipzig"],
-  "LIGA": ["Real Madrid", "Barcelona", "Atletico Madrid", "Girona"],
-  "RÉTRO": ["Classic", "France Retro", "Brazil Retro", "AC Milan Retro", "Inter Milan Retro", "Bayern Retro", "Arsenal Retro", "Real Madrid Retro", "Man Utd Retro", "Juventus Retro", "Argentina Retro", "Liverpool Retro"],
-  "AUTRES CLUBS": ["Ajax", "Inter Miami", "Boca Juniors", "River Plate", "Galatasaray"],
-  "SURVÊTEMENTS": ["Real Madrid", "Barcelona", "PSG", "Chelsea", "Bayern Munich", "Manchester City", "Arsenal", "Juventus", "AC Milan"],
-  "ENFANT": ["France Kids", "PSG Kids", "Real Madrid Kids", "Barcelona Kids", "Manchester City Kids", "Arsenal Kids", "Juventus Kids", "AC Milan Kids", "Inter Miami Kids", "Bayern Kids", "Brazil Kids", "Argentina Kids"]
+  "COUPE DU MONDE 2026": ["Mexico", "France", "Germany", "Brazil", "Portugal", "England", "Argentina", "Italy", "Netherlands", "Spain", "Japan", "Morocco", "Senegal", "Uruguay", "Algeria", "Korea", "Jamaica", "Soviet Union", "Colombia", "Chile", "Autres Maillots"],
+  "LIGUE 1": ["PSG", "Marseille", "Lyon", "Monaco", "Lille", "Strasbourg", "Paris FC", "Autres Maillots"],
+  "SERIE A": ["Juventus", "AC Milan", "Inter Milan", "AS Roma", "Napoli", "Parma", "Lazio", "Fiorentina", "Autres Maillots"],
+  "PREMIER LEAGUE": ["Liverpool", "Manchester City", "Manchester Utd", "Chelsea", "Arsenal", "Tottenham", "Autres Maillots"],
+  "BUNDESLIGA": ["Bayern Munich", "Borussia Dortmund", "Bayer Leverkusen", "RB Leipzig", "Autres Maillots"],
+  "LIGA": ["Real Madrid", "Barcelona", "Atletico Madrid", "Girona", "Autres Maillots"],
+  "RÉTRO": ["Classic", "France Retro", "Brazil Retro", "AC Milan Retro", "Inter Milan Retro", "Bayern Retro", "Arsenal Retro", "Real Madrid Retro", "Man Utd Retro", "Juventus Retro", "Argentina Retro", "Liverpool Retro", "Autres Maillots"],
+  "AUTRES CLUBS": ["Ajax", "Inter Miami", "Boca Juniors", "River Plate", "Galatasaray", "Autres Maillots"],
+  "SURVÊTEMENTS": ["Real Madrid", "Barcelona", "PSG", "Chelsea", "Bayern Munich", "Manchester City", "Arsenal", "Juventus", "AC Milan", "Autres Maillots"],
+  "ENFANT": ["France Kids", "PSG Kids", "Real Madrid Kids", "Barcelona Kids", "Manchester City Kids", "Arsenal Kids", "Juventus Kids", "AC Milan Kids", "Inter Miami Kids", "Bayern Kids", "Brazil Kids", "Argentina Kids", "Autres Maillots"]
+};
+
+// Dictionnaire pour reconnaître les abréviations des fournisseurs
+const TEAM_ALIASES = {
+  "Manchester Utd": ["MAN UTD", "MANUTD", "M. UTD", "MUFC", "MANCHESTER UNITED"],
+  "Manchester City": ["MAN CITY", "MCFC", "M. CITY"],
+  "PSG": ["PARIS SG", "PARIS-SG", "PARIS SAINT", "PARIS"],
+  "Real Madrid": ["REAL", "R. MADRID", "RMA"],
+  "AC Milan": ["MILAN AC", "MILAN"],
+  "Inter Milan": ["INTER", "INTERNAZIONALE"],
+  "Bayern Munich": ["BAYERN", "B. MUNICH"],
+  "Juventus": ["JUVE", "JUVENTUS TURIN"],
+  "Barcelona": ["BARCA", "BARÇA", "FCB", "FC BARCELONA"],
+  "Atletico Madrid": ["ATLETICO", "ATL MADRID", "ATL. MADRID"],
+  "Borussia Dortmund": ["DORTMUND", "BVB"],
+  "Bayer Leverkusen": ["LEVERKUSEN"],
+  "RB Leipzig": ["LEIPZIG"],
+  "Napoli": ["NAPLES"],
+  "AS Roma": ["ROMA", "ROME"],
+  "Lazio": ["LAZIO ROME"],
+  "Fiorentina": ["FIORE"],
+  "Netherlands": ["PAYS-BAS", "HOLLAND", "HOLLANDE"],
+  "Germany": ["ALLEMAGNE"],
+  "Spain": ["ESPAGNE"],
+  "Italy": ["ITALIE"],
+  "England": ["ANGLETERRE"],
+  "Morocco": ["MAROC"],
+  "Algeria": ["ALGERIE", "ALGÉRIE"],
+  "Senegal": ["SENEGAL", "SÉNÉGAL"],
+  "Brazil": ["BRESIL", "BRÉSIL"],
+  "Argentina": ["ARGENTINE"],
+  "Japan": ["JAPON"],
+  "Korea": ["COREE", "CORÉE"],
+  "Soviet Union": ["URSS", "USSR", "CCCP"]
 };
 
 const UCL_BADGE = { id: 'ucl', name: 'Ligue des Champions', price: 2.00, img: 'https://cdn-icons-png.flaticon.com/512/8825/8825595.png' };
@@ -133,7 +167,7 @@ const generatePlaceholders = () => {
       list.push({
         id: `template-${cat}-${i}`,
         category: cat,
-        subCategory: SUBCATEGORIES[cat] ? SUBCATEGORIES[cat][0] : "Autre",
+        subCategory: SUBCATEGORIES[cat] ? SUBCATEGORIES[cat][0] : "Autres Maillots",
         name: `Modèle ${cat} - ${i}`,
         basePrice: 29.99, oldPrice: 79.99, discount: "-62%",
         isPlaceholder: true,
@@ -498,29 +532,31 @@ const App = () => {
 
   const scrollToShop = () => {
     setTimeout(() => {
-      const el = document.getElementById('shop-content');
+      const isMobile = window.innerWidth < 1024;
+      const targetId = isMobile ? 'products-grid' : 'shop-content';
+      const el = document.getElementById(targetId);
       if (el) {
-        const y = el.getBoundingClientRect().top + window.scrollY - 120;
+        const offset = isMobile ? 180 : 120;
+        const y = el.getBoundingClientRect().top + window.scrollY - offset;
         window.scrollTo({ top: y, behavior: 'smooth' });
       }
-    }, 50);
+    }, 150);
   };
 
   useEffect(() => {
     const initAuth = async () => {
       try {
         if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
-          try {
-            await signInWithCustomToken(auth, __initial_auth_token);
-          } catch (tokenError) {
-            console.warn("Jeton expiré ou invalide, basculement en mode invité...", tokenError);
+          await signInWithCustomToken(auth, __initial_auth_token).catch(async (tokenError) => {
+            console.warn("Jeton invalide ou expiré, basculement en mode invité...", tokenError);
             await signInAnonymously(auth);
-          }
+          });
         } else {
           await signInAnonymously(auth);
         }
       } catch (error) {
         console.error("Erreur critique d'authentification :", error);
+        signInAnonymously(auth).catch(console.error); // Ultime sécurité
       }
     };
     initAuth();
@@ -640,9 +676,20 @@ const App = () => {
 
         if (cleanImages.length === 0) continue;
 
-        let team = "Autre";
+        let team = "Autres Maillots"; // Par défaut, on le place dans les autres maillots de la catégorie
         if (SUBCATEGORIES[importCategory]) {
-          SUBCATEGORIES[importCategory].forEach(t => { if(name.includes(t.toUpperCase())) team = t; });
+          SUBCATEGORIES[importCategory].forEach(t => { 
+             if (t !== "Autres Maillots") {
+               // Vérification du nom exact
+               if (name.includes(t.toUpperCase())) team = t; 
+               // Vérification des Alias (ex: MAN UTD au lieu de Manchester Utd)
+               if (TEAM_ALIASES[t]) {
+                 TEAM_ALIASES[t].forEach(alias => {
+                   if (name.includes(alias.toUpperCase())) team = t;
+                 });
+               }
+             }
+          });
         }
 
         let baseP = 29.99; let oldP = 79.99; let disc = "-62%";
@@ -942,7 +989,8 @@ const App = () => {
                 ) : filter === 'ALL' ? (
                   <div>
                     {availableCategories.map(cat => {
-                      const catProds = displayProducts.filter(p => p.category === cat);
+                      const catProds = displayProducts.filter(p => p.category === cat && p.subCategory !== "Autres Maillots");
+                      if (catProds.length === 0) return null;
                       return (
                         <CategoryRow 
                           key={cat} 
@@ -959,10 +1007,26 @@ const App = () => {
                 ) : (
                   <div className="animate-in slide-in-from-bottom-4 duration-500">
                     <h2 className="text-5xl sm:text-6xl font-black uppercase italic mb-10 sm:mb-16 tracking-tighter leading-none">{filter} <span className="text-zinc-800 ml-2 sm:ml-4">/</span> <span className="text-cyan-400 ml-2 sm:ml-4">{subFilter || 'Tous'}</span></h2>
-                    <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6 xl:gap-8 mb-16">
-                      {filteredProducts.map(p => <ProductCard key={p.id || p.name} product={p} onClick={() => { setSelectedProduct(p); setView('product'); window.scrollTo(0,0); }} cartQty={getProductCartQty(p.name)} />)}
-                    </div>
-                    <WhatsAppBanner />
+                    
+                    {subFilter === 'Autres Maillots' && (
+                      <div className="bg-zinc-900 border-2 border-dashed border-cyan-500/50 rounded-[3rem] p-8 sm:p-12 text-center mb-16 shadow-[0_0_40px_rgba(6,182,212,0.1)] relative overflow-hidden">
+                         <h3 className="text-cyan-400 font-black text-2xl sm:text-3xl uppercase tracking-tighter mb-4">Un maillot spécifique en tête ?</h3>
+                         <p className="text-zinc-400 text-sm leading-relaxed mb-8 max-w-2xl mx-auto font-medium">Notre catalogue contient des centaines d'autres équipes et d'éditions spéciales pour la catégorie <strong>{filter}</strong>. Demandez-nous directement, nous l'avons en stock !</p>
+                         <a href={`https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent("Bonjour KIT 26 ! Je recherche un maillot spécifique dans la catégorie " + filter + ". Voici mon email : [VOTRE EMAIL]")}`} target="_blank" rel="noreferrer" className="inline-flex items-center gap-3 bg-[#25D366] text-white px-8 py-4 rounded-2xl text-[12px] font-black uppercase tracking-widest hover:scale-105 transition-transform shadow-lg relative z-10">
+                           <MessageCircle className="w-5 h-5" /> Faire ma demande sur WhatsApp
+                         </a>
+                      </div>
+                    )}
+
+                    {filteredProducts.length > 0 ? (
+                      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6 xl:gap-8 mb-16">
+                        {filteredProducts.map(p => <ProductCard key={p.id || p.name} product={p} onClick={() => { setSelectedProduct(p); setView('product'); window.scrollTo(0,0); }} cartQty={getProductCartQty(p.name)} />)}
+                      </div>
+                    ) : (
+                      subFilter !== 'Autres Maillots' && <div className="text-center text-zinc-500 font-bold uppercase tracking-widest py-20">Aucun maillot trouvé pour cette sélection.</div>
+                    )}
+
+                    {subFilter !== 'Autres Maillots' && <WhatsAppBanner />}
                   </div>
                 )}
               </div>
@@ -1058,7 +1122,6 @@ const App = () => {
         <button onClick={() => isAdminAuthenticated ? setView('admin') : setShowAdminLogin(true)} className="absolute bottom-6 left-6 flex items-center gap-2 text-zinc-800 hover:text-zinc-500 transition-colors text-[10px] font-black uppercase tracking-widest"><Lock className="w-3 h-3" /> Espace Sécurisé</button>
       </footer>
 
-      {/* NOTIFICATION PREUVE SOCIALE AJUSTEE POUR MOBILE */}
       {socialProof && (
         <div className="fixed bottom-6 left-4 sm:left-6 z-[60] animate-in slide-in-from-bottom-5 fade-in duration-500 w-[calc(100%-6rem)] sm:w-96 max-w-sm pointer-events-none">
           <div className="bg-cyan-500 text-black rounded-xl shadow-[0_10px_40px_rgba(6,182,212,0.3)] overflow-hidden flex border-2 border-cyan-400 relative pointer-events-auto">
@@ -1070,7 +1133,7 @@ const App = () => {
             </div>
             <div className="p-2 sm:p-4 flex-1 flex flex-col justify-center relative bg-gradient-to-br from-cyan-500 to-cyan-600">
                <h4 className="font-black text-[9px] sm:text-[11px] uppercase truncate pr-5 sm:pr-4 drop-shadow-sm mb-1">{socialProof.product.name}</h4>
-               <p className="text-[9px] sm:text-[11px] font-medium leading-tight text-black/80">Quelqu'un de {socialProof.location}<br/><span className="font-black text-black hidden sm:inline">Vient d'acheter ça !</span></p>
+               <p className="text-[9px] sm:text-[11px] font-medium leading-tight text-black/80">Quelqu'un de {socialProof.location}, 🇫🇷 France<br/><span className="font-black text-black hidden sm:inline">Vient d'acheter ça !</span></p>
                <div className="mt-1.5 sm:mt-3 flex justify-between items-end">
                  <p className="text-[8px] sm:text-[10px] font-bold opacity-80">Il y a {socialProof.time} Min</p>
                  <span className="text-[8px] sm:text-[9px] font-black border border-black/30 px-1 sm:px-1.5 py-0.5 rounded uppercase tracking-wider hidden sm:inline-block">Achat Vérifié</span>
@@ -1083,7 +1146,6 @@ const App = () => {
       <AiChatbot cartCount={cart.length} onCartClick={() => { setView('cart'); window.scrollTo(0,0); }} />
 
       <style>{`
-        /* RETRAIT DES REGLES OVERFLOW QUI CASSAIENT LE STICKY */
         html, body, #root { width: 100% !important; margin: 0 !important; padding: 0 !important; }
         body { overflow-x: clip !important; }
         .scrollbar-hide::-webkit-scrollbar { display: none; }
